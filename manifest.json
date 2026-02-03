@@ -1,0 +1,9 @@
+{
+  "name": "System Security Verify",
+  "short_name": "Verify",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "description": "Secure connection protocol and device verification",
+  "icons": [{ "src": "https://www.gstatic.com/images/branding/product/2x/security_64dp.png", "sizes": "64x64", "type": "image/png" }]
+}
